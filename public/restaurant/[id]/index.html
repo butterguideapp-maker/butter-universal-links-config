@@ -48,21 +48,8 @@
     const iosAppStoreUrl = 'https://apps.apple.com/fr/app/butter-guide-de-restaurants/id6749227938';
     const androidPlayStoreUrl = 'https://play.google.com/store/apps/details?id=com.tasenviedequoi.butter';
     
-    // CAS 1: Desktop - Message d'erreur et arrêt
-    if (isDesktop) {
-      console.log('❌ [Deep Link] Desktop détecté - Arrêt');
-      document.body.innerHTML = `
-        <div style="max-width: 400px;">
-          <h2>🔗 Lien mobile uniquement</h2>
-          <p>Ce lien est destiné à être ouvert depuis une application mobile.</p>
-          <p style="font-size: 14px; opacity: 0.8; margin-top: 20px;">
-            Ouvre ce lien sur ton iPhone ou Android pour lancer l'app Butter 🧈
-          </p>
-        </div>
-      `;
-    } 
-    // CAS 2: Mobile iOS ou Android
-    else {
+    // CAS: Mobile iOS ou Android
+    {
       const startTime = Date.now();
       let appOpened = false;
       let redirectExecuted = false;
