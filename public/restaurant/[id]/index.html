@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8拼接">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ouvrir dans Butter 🧈</title>
   <meta name="description" content="Ouvre ce restaurant dans l'application Butter">
@@ -50,6 +50,23 @@
       line-height: 1.6;
     }
     
+    .button {
+      display: inline-block;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 16px;
+      margin: 8px;
+    }
+    
+    .button-store {
+      background: #f5f5f5;
+      color: #333;
+    }
+    
     .spinner {
       border: 4px solid #f3f3f3;
       border-top: 4px solid #667eea;
@@ -70,21 +87,23 @@
   <div class="container">
     <div class="icon">🧈</div>
     <h1>Ouvrir dans Butter</h1>
-    <p id="message">Ouverture de l'application en cours...</p>
-    <div class="spinner"></div>
+    <p id="message">Clique sur le bouton pour ouvrir ce restaurant dans l'app Butter.</p>
+    <div id="content">
+      <a href="#" id="openApp" class="button">Ouvrir l'app Butter</a>
+      <br>
+      <a href="#" id="downloadApp" class="button button-store">Télécharger l'app</a>
+    </div>
+    <div id="spinner" class="spinner" style="display:none;"></div>
   </div>
 
   <script>
-    // Vérifier si on est dans une tentative de fallback (éviter les boucles)
-    const isFallback = sessionStorage.getItem('deep_link_fallback');
-    
     // Récupérer l'ID du restaurant depuis l'URL
-    const pathSegments = window.location.pathname.split('/');
-    const restaurantId = pathSegments[pathSegments.length - 2] || pathSegments[pathSegments.length - 1];
+    const pathSegments = window.location.pathname.split('/').filter(p => p);
+    const restaurantId = pathSegments[pathSegments.length - 1];
     
-    // URL de l'application
+    // URLs
     const deepLinkUrl = `https://butter-universal-links-config.vercel.app/restaurant/${restaurantId}`;
-    const iosAppStoreUrl = 'https://apps.apple.com/app/butter/idYOUR_APP_ID'; // ⚠️ REMPLACER PAR LE VRAI APP ID
+    const iosAppStoreUrl = 'https://apps.apple.com/app/butter/idYOUR_APP_ID';
     const androidPlayStoreUrl = 'https://play.google.com/store/apps/details?id=com.tasenviedequoi.butter';
     
     // Détecter la plateforme
@@ -92,55 +111,59 @@
     const isAndroid = /Android/.test(navigator.userAgent);
     const isMobile = isIOS || isAndroid;
     
-    function redirectToStore() {
-      sessionStorage.setItem('deep_link_fallback', 'true');
-      
+    const openAppBtn = document.getElementById('openApp');
+    const downloadAppBtn = document.getElementById('downloadApp');
+    const message = document.getElementById('message');
+    const content = document.getElementById('content');
+    const spinner = document.getElementById('spinner');
+    
+    // Bouton "Ouvrir l'app"
+    openAppBtn.href = deepLinkUrl;
+    
+    // Bouton "Télécharger"
+    downloadAppBtn.addEventListener('click', function(e) {
+      e.preventDefault();
       if (isIOS) {
-        document.getElementById('message').textContent = 'Redirection vers l\'App Store...';
         window.location.href = iosAppStoreUrl;
       } else if (isAndroid) {
-        document.getElementById('message').textContent = 'Redirection vers le Play Store...';
         window.location.href = androidPlayStoreUrl;
-      } else {
-        document.getElementById('message').textContent = 'Ouvre cette page sur un appareil mobile pour télécharger l\'app.';
       }
-    }
+    });
     
-    // Si on est déjà dans un fallback, ne pas essayer à nouveau
-    if (isFallback) {
-      redirectToStore();
-    } else if (isMobile) {
-      // Sur mobile, essayer d'ouvrir l'app
-      const appUrl = `https://butter-universal-links-config.vercel.app/restaurant/${restaurantId}`;
-      
-      // Marquer le début de la tentative
-      const startTime = Date.now();
-      let blurred = false;
-      
-      // Détecter si l'utilisateur quitte la page (app ouverte)
-      window.addEventListener('blur', function() {
-        blurred = true;
-      });
-      
-      // Tentative d'ouverture de l'app
-      window.location.href = appUrl;
-      
-      // Si après 2 secondes on est toujours sur la page, c'est que l'app n'est pas installée
+    // Sur mobile, ouvrir automatiquement après un court délai
+    if (isMobile) {
       setTimeout(function() {
-        const elapsed = Date.now() - startTime;
+        // Afficher le spinner
+        content.style.display = 'none';
+        spinner.style.display = 'block';
+        message.textContent = 'Ouverture en cours...';
         
-        // Si la page a été blur (app ouverte) OU si on a passé trop de temps
-        if (blurred || elapsed > 2000) {
-          // L'app est ouverte ou pas installée
-          if (!blurred) {
-            // L'app n'a pas été ouverte, rediriger vers le store
-            redirectToStore();
-          }
-        }
-      }, 2000);
-    } else {
-      // Sur desktop, inviter à utiliser mobile
-      document.getElementById('message').textContent = 'Ouvre ce lien sur ton iPhone ou Android pour lancer l\'app Butter.';
+        // Créer un lien invisible et le cliquer pour déclencher Universal Links
+        const link = document.createElement('a');
+        link.href = deepLinkUrl;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Si après 2 secondes on est toujours là, c'est que l'app n'est pas installée
+        setTimeout(function() {
+          spinner.style.display = 'none';
+          content.style.display = 'block';
+          message.textContent = 'L\'application ne semble pas installée. Télécharge-la !';
+          
+          // Mettre à jour le bouton pour ouvrir le store
+          openAppBtn.textContent = 'Ouvrir l\'App Store';
+          openAppBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (isIOS) {
+              window.location.href = iosAppStoreUrl;
+            } else if (isAndroid) {
+              window.location.href = androidPlayStoreUrl;
+            }
+          }, { once: true });
+        }, 2000);
+      }, 500);
     }
   </script>
 </body>
