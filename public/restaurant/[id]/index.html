@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Redirection...</title>
+  <title>Ouvrir Butter 🧈</title>
   <style>
     body {
       background: #667eea;
@@ -17,95 +17,60 @@
       text-align: center;
       padding: 20px;
     }
-    .message { font-size: 18px; }
   </style>
 </head>
 <body>
-  <div class="message">🔗 Redirection...</div>
+  <div>
+    <p style="font-size: 48px; margin-bottom: 20px;">🧈</p>
+    <p style="font-size: 20px;">Ouvre dans Butter</p>
+    <p style="font-size: 14px; opacity: 0.8;">Redirection automatique...</p>
+  </div>
+
   <script>
-    console.log('🚀 [Deep Link] Initialisation de la redirection');
+    console.log('🚀 [Deep Link] Initialisation');
     
     // Récupérer l'ID du restaurant
     const pathSegments = window.location.pathname.split('/').filter(p => p);
     const restaurantId = pathSegments[pathSegments.length - 1];
+    console.log('📍 Restaurant ID:', restaurantId);
     
-    console.log('📍 [Deep Link] Restaurant ID:', restaurantId);
+    // Détecter la plateforme
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isAndroid = /Android/.test(navigator.userAgent);
     
-    // Protection contre les boucles infinies
-    const alreadyTried = sessionStorage.getItem('deep_link_attempted');
-    console.log('🛡️ [Deep Link] Déjà tenté dans cette session:', alreadyTried);
+    console.log('📱 Plateforme:', { isIOS, isAndroid });
     
-    if (alreadyTried) {
-      console.log('⏸️ [Deep Link] Tentative déjà effectuée - Arrêt pour éviter boucle');
-      document.querySelector('.message').textContent = '🔗 Redirection en cours... (déjà tentée)';
-    } else {
-      // Marquer comme tenté
-      sessionStorage.setItem('deep_link_attempted', 'true');
-      
-      // Détecter la plateforme
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-      const isAndroid = /Android/.test(navigator.userAgent);
-      const isDesktop = !isIOS && !isAndroid;
-      
-      console.log('📱 [Deep Link] Plateforme détectée:', {
-        isIOS,
-        isAndroid,
-        isDesktop,
-        userAgent: navigator.userAgent
-      });
-      
-      // URLs
-      const deepLinkUrl = `https://butter-universal-links-config.vercel.app/restaurant/${restaurantId}`;
-      const iosAppStoreUrl = 'https://apps.apple.com/fr/app/butter-guide-de-restaurants/id6749227938';
-      const androidPlayStoreUrl = 'https://play.google.com/store/apps/details?id=com.tasenviedequoi.butter';
-      
-      const startTime = Date.now();
-      let appOpened = false;
-      let redirectExecuted = false;
-      
-      // Détecter si l'app s'est ouverte (blur = page perdue le focus)
-      window.addEventListener('blur', () => {
-        appOpened = true;
-        console.log('✅ [Deep Link] App ouverte détectée via blur');
-      });
-      
-      // Détecter si on quitte la page (avantunload)
-      window.addEventListener('beforeunload', () => {
-        appOpened = true;
-        console.log('✅ [Deep Link] App ouverte détectée via beforeunload');
-      });
-      
-      console.log('🎯 [Deep Link] Tentative d\'ouverture de l\'app:', deepLinkUrl);
-      
-      // Créer un lien invisible et le cliquer (ne recharge PAS la page)
-      const link = document.createElement('a');
-      link.href = deepLinkUrl;
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      console.log('🖱️ [Deep Link] Clic sur lien invisible');
+    // URLs
+    const deepLinkUrl = `https://butter-universal-links-config.vercel.app/restaurant/${restaurantId}`;
+    const iosAppStoreUrl = 'https://apps.apple.com/fr/app/butter-guide-de-restaurants/id6749227938';
+    const androidPlayStoreUrl = 'https://play.google.com/store/apps/details?id=com.tasenviedequoi.butter';
+    
+    // Créer un lien invisible et le cliquer
+    const link = document.createElement('a');
+    link.href = deepLinkUrl;
+    link.style.position = 'fixed';
+    link.style.top = '-9999px';
+    link.style.left = '-9999px';
+    document.body.appendChild(link);
+    
+    console.log('🔗 Lien créé:', deepLinkUrl);
+    
+    // Simuler un clic après 500ms
+    setTimeout(() => {
+      console.log('🖱️ Clic automatique');
       link.click();
-      document.body.removeChild(link);
       
-      // Après 2.5 secondes, si l'app ne s'est pas ouverte, rediriger vers le store
+      // Après 2.5 secondes, vérifier si on doit rediriger vers le store
       setTimeout(() => {
-        if (!appOpened && !redirectExecuted) {
-          redirectExecuted = true;
-          const elapsed = Date.now() - startTime;
-          console.log('⏱️ [Deep Link] Timeout après', elapsed, 'ms');
-          console.log('🔄 [Deep Link] Redirection vers le store');
-          
-          if (isIOS) {
-            console.log('🍎 [Deep Link] Redirection App Store:', iosAppStoreUrl);
-            window.location.href = iosAppStoreUrl;
-          } else if (isAndroid) {
-            console.log('🤖 [Deep Link] Redirection Play Store:', androidPlayStoreUrl);
-            window.location.href = androidPlayStoreUrl;
-          }
-        } else if (appOpened) {
-          console.log('✅ [Deep Link] App déjà ouverte - Pas de redirection nécessaire');
+        console.log('⏱️ Timeout - Redirection vers le store');
+        
+        if (isIOS) {
+          window.location.href = iosAppStoreUrl;
+        } else if (isAndroid) {
+          window.location.href = androidPlayStoreUrl;
         }
       }, 2500);
-    }
+    }, 500);
   </script>
 </body>
 </html>
