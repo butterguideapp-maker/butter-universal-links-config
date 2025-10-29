@@ -3,44 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirection...</title>
+  <style>
+    body {
+      background: #667eea;
+      color: white;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+      padding: 20px;
+    }
+    .message { font-size: 18px; }
+  </style>
+</head>
+<body>
+  <div class="message">🔗 Redirection...</div>
   <script>
+    console.log('🚀 [Deep Link] Initialisation de la redirection');
+    
     // Récupérer l'ID du restaurant
     const pathSegments = window.location.pathname.split('/').filter(p => p);
     const restaurantId = pathSegments[pathSegments.length - 1];
     
+    console.log('📍 [Deep Link] Restaurant ID:', restaurantId);
+    
     // Détecter la plateforme
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isAndroid = /Android/.test(navigator.userAgent);
+    const isDesktop = !isIOS && !isAndroid;
+    
+    console.log('📱 [Deep Link] Plateforme détectée:', {
+      isIOS,
+      isAndroid,
+      isDesktop,
+      userAgent: navigator.userAgent
+    });
     
     // URLs
     const deepLinkUrl = `https://butter-universal-links-config.vercel.app/restaurant/${restaurantId}`;
     const iosAppStoreUrl = 'https://apps.apple.com/fr/app/butter-guide-de-restaurants/id6749227938';
     const androidPlayStoreUrl = 'https://play.google.com/store/apps/details?id=com.tasenviedequoi.butter';
     
-    // Tenter d'ouvrir l'app
-    const startTime = Date.now();
-    let blurred = false;
-    
-    window.addEventListener('blur', () => { blurred = true; });
-    
-    // Essayer d'ouvrir l'app via Universal Links / App Links
-    window.location.href = deepLinkUrl;
-    
-    // Après 2 secondes, si l'app ne s'est pas ouverte, rediriger vers le store
-    setTimeout(() => {
-      if (!blurred) {
-        if (isIOS) {
-          window.location.href = iosAppStoreUrl;
-        } else if (isAndroid) {
-          window.location.href = androidPlayStoreUrl;
+    // CAS 1: Desktop - Message d'erreur et arrêt
+    if (isDesktop) {
+      console.log('❌ [Deep Link] Desktop détecté - Arrêt');
+      document.body.innerHTML = `
+        <div style="max-width: 400px;">
+          <h2>🔗 Lien mobile uniquement</h2>
+          <p>Ce lien est destiné à être ouvert depuis une application mobile.</p>
+          <p style="font-size: 14px; opacity: 0.8; margin-top: 20px;">
+            Ouvre ce lien sur ton iPhone ou Android pour lancer l'app Butter 🧈
+          </p>
+        </div>
+      `;
+    } 
+    // CAS 2: Mobile iOS ou Android
+    else {
+      const startTime = Date.now();
+      let appOpened = false;
+      let redirectExecuted = false;
+      
+      // Détecter si l'app s'est ouverte (blur = page perdue le focus)
+      window.addEventListener('blur', () => {
+        appOpened = true;
+        console.log('✅ [Deep Link] App ouverte détectée via blur');
+      });
+      
+      // Détecter si on quitte la page (avantunload)
+      window.addEventListener('beforeunload', () => {
+        appOpened = true;
+        console.log('✅ [Deep Link] App ouverte détectée via beforeunload');
+      });
+      
+      console.log('🎯 [Deep Link] Tentative d\'ouverture de l\'app:', deepLinkUrl);
+      
+      // Tenter d'ouvrir l'app
+      window.location.href = deepLinkUrl;
+      
+      // Après 2.5 secondes, si l'app ne s'est pas ouverte, rediriger vers le store
+      setTimeout(() => {
+        if (!appOpened && !redirectExecuted) {
+          redirectExecuted = true;
+          const elapsed = Date.now() - startTime;
+          console.log('⏱️ [Deep Link] Timeout après', elapsed, 'ms');
+          console.log('🔄 [Deep Link] Redirection vers le store');
+          
+          if (isIOS) {
+            console.log('🍎 [Deep Link] Redirection App Store:', iosAppStoreUrl);
+            window.location.href = iosAppStoreUrl;
+          } else if (isAndroid) {
+            console.log('🤖 [Deep Link] Redirection Play Store:', androidPlayStoreUrl);
+            window.location.href = androidPlayStoreUrl;
+          }
+        } else if (appOpened) {
+          console.log('✅ [Deep Link] App déjà ouverte - Pas de redirection nécessaire');
         }
-      }
-    }, 2000);
+      }, 2500);
+    }
   </script>
-</head>
-<body>
-  <div style="text-align: center; padding: 50px; font-family: system-ui;">
-    <p>Redirection en cours...</p>
-  </div>
 </body>
 </html>
