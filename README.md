@@ -1,12 +1,12 @@
 # 🔗 butter-universal-links-config
 
-Configuration des **Universal Links** pour l'application iOS butter.paris. Ce repository héberge le fichier `apple-app-site-association` requis par Apple pour autoriser l'ouverture des liens profonds (`deep links`) depuis le domaine butter.paris vers l'application mobile.
+Configuration des **Universal Links** pour l'application iOS butter. Ce repository héberge le fichier `apple-app-site-association` requis par Apple pour autoriser l'ouverture des liens profonds (`deep links`) depuis le domaine `butter-universal-links-config.vercel.app` vers l'application mobile.
 
 ## 🎯 Description
 
-Ce projet minimaliste permet d'héberger le fichier de configuration des Universal Links sur le domaine butter.paris. Il peut être déployé sur **Vercel** (recommandé) ou tout autre serveur web pour rendre accessible le fichier `.well-known/apple-app-site-association` requis par Apple.
+Ce projet minimaliste permet d'héberger le fichier de configuration des Universal Links sur le domaine `butter-universal-links-config.vercel.app`. Il peut être déployé sur **Vercel** (recommandé) ou tout autre serveur web pour rendre accessible le fichier `.well-known/apple-app-site-association` requis par Apple.
 
-**Principe** : Quand un utilisateur clique sur un lien comme `https://butter.paris/restaurant/123` dans Safari, iOS vérifie ce fichier pour savoir si l'application butter doit l'ouvrir automatiquement.
+**Principe** : Quand un utilisateur clique sur un lien comme `https://butter-universal-links-config.vercel.app/restaurant/123` dans Safari, iOS vérifie ce fichier pour savoir si l'application butter doit l'ouvrir automatiquement.
 
 ## 🚨 Modification requise
 
@@ -47,50 +47,40 @@ vercel
 # Une fois déployé, aller dans Settings → Domains
 ```
 
-### Étape 4 : Configurer le domaine butter.paris
-1. Dans Vercel, aller dans **Settings** → **Domains**
-2. Ajouter `butter.paris`
-3. Vercel te donnera les instructions DNS à configurer chez ton registrar
-
-### Étape 5 : Vérifier
-Une fois déployé, vérifie que ça fonctionne :
+### Étape 4 : Vérifier
+Le projet est déjà déployé ! Vérifie que ça fonctionne :
 ```
-https://butter.paris/.well-known/apple-app-site-association
+https://butter-universal-links-config.vercel.app/.well-known/apple-app-site-association
 ```
 
 Si tu vois le JSON brut → ✅ **Apple pourra le lire !**
 
 ## 🔧 Option 2 : Héberger sur un serveur existant
 
-Si tu as déjà un site sur butter.paris :
+Si tu veux utiliser un domaine custom :
 
 ### Pour Nginx :
-```bash
-# Copier le dossier .well-known à la racine
-scp -r .well-known/ user@server:/var/www/html/
-```
-
-### Pour un CMS (WordPress, etc.) :
-1. Place le dossier `.well-known` à la racine du domaine
-2. Assure-toi que le serveur web le sert correctement (sans extension `.json`)
+1. Va dans Settings → Domains sur Vercel
+2. Ajoute ton domaine custom (ex: `butter.paris`)
+3. Configure le DNS selon les instructions Vercel
 
 ## ✅ Tests après déploiement
 
 ### Test 1 : Vérifier l'URL
 ```
-curl https://butter.paris/.well-known/apple-app-site-association
+curl https://butter-universal-links-config.vercel.app/.well-known/apple-app-site-association
 ```
 Tu devrais voir le JSON brut (sans balises HTML).
 
 ### Test 2 : Vérifier le Content-Type
 ```
-curl -I https://butter.paris/.well-known/apple-app-site-association
+curl -I https://butter-universal-links-config.vercel.app/.well-known/apple-app-site-association
 ```
 Le header `Content-Type` doit être `application/json` ou `application/pkcs7-mime`.
 
 ### Test 3 : Tester dans l'app iOS
 1. Dans l'app Settings → Developer Options (si activé)
-2. Ou simplement tester avec un lien : `https://butter.paris/restaurant/123`
+2. Ou simplement tester avec un lien : `https://butter-universal-links-config.vercel.app/restaurant/123`
 
 ## 📝 Notes importantes
 
@@ -116,7 +106,8 @@ Le header `Content-Type` doit être `application/json` ou `application/pkcs7-mim
 - Attends quelques heures (Apple cache)
 - Réinstalle l'app sur l'iPhone
 - Active "Associated Domains" dans Xcode → Capabilities
-- Teste avec un vrai lien : ouvrir `https://butter.paris/restaurant/123` dans Safari
+- Ajoute : `applinks:butter-universal-links-config.vercel.app`
+- Teste avec un vrai lien : ouvrir `https://butter-universal-links-config.vercel.app/restaurant/123` dans Safari
 
 ## 📚 Ressources
 
