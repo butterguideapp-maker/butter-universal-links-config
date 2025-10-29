@@ -31,25 +31,34 @@
     
     console.log('📍 [Deep Link] Restaurant ID:', restaurantId);
     
-    // Détecter la plateforme
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    const isAndroid = /Android/.test(navigator.userAgent);
-    const isDesktop = !isIOS && !isAndroid;
+    // Protection contre les boucles infinies
+    const alreadyTried = sessionStorage.getItem('deep_link_attempted');
+    console.log('🛡️ [Deep Link] Déjà tenté dans cette session:', alreadyTried);
     
-    console.log('📱 [Deep Link] Plateforme détectée:', {
-      isIOS,
-      isAndroid,
-      isDesktop,
-      userAgent: navigator.userAgent
-    });
-    
-    // URLs
-    const deepLinkUrl = `https://butter-universal-links-config.vercel.app/restaurant/${restaurantId}`;
-    const iosAppStoreUrl = 'https://apps.apple.com/fr/app/butter-guide-de-restaurants/id6749227938';
-    const androidPlayStoreUrl = 'https://play.google.com/store/apps/details?id=com.tasenviedequoi.butter';
-    
-    // CAS: Mobile iOS ou Android
-    {
+    if (alreadyTried) {
+      console.log('⏸️ [Deep Link] Tentative déjà effectuée - Arrêt pour éviter boucle');
+      document.querySelector('.message').textContent = '🔗 Redirection en cours... (déjà tentée)';
+    } else {
+      // Marquer comme tenté
+      sessionStorage.setItem('deep_link_attempted', 'true');
+      
+      // Détecter la plateforme
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const isAndroid = /Android/.test(navigator.userAgent);
+      const isDesktop = !isIOS && !isAndroid;
+      
+      console.log('📱 [Deep Link] Plateforme détectée:', {
+        isIOS,
+        isAndroid,
+        isDesktop,
+        userAgent: navigator.userAgent
+      });
+      
+      // URLs
+      const deepLinkUrl = `https://butter-universal-links-config.vercel.app/restaurant/${restaurantId}`;
+      const iosAppStoreUrl = 'https://apps.apple.com/fr/app/butter-guide-de-restaurants/id6749227938';
+      const androidPlayStoreUrl = 'https://play.google.com/store/apps/details?id=com.tasenviedequoi.butter';
+      
       const startTime = Date.now();
       let appOpened = false;
       let redirectExecuted = false;
@@ -68,8 +77,14 @@
       
       console.log('🎯 [Deep Link] Tentative d\'ouverture de l\'app:', deepLinkUrl);
       
-      // Tenter d'ouvrir l'app
-      window.location.href = deepLinkUrl;
+      // Créer un lien invisible et le cliquer (ne recharge PAS la page)
+      const link = document.createElement('a');
+      link.href = deepLinkUrl;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      console.log('🖱️ [Deep Link] Clic sur lien invisible');
+      link.click();
+      document.body.removeChild(link);
       
       // Après 2.5 secondes, si l'app ne s'est pas ouverte, rediriger vers le store
       setTimeout(() => {
