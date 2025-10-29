@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ouvrir Butter 🧈</title>
+  <meta name="robots" content="noindex, nofollow" />
   <style>
     body {
       background: #667eea;
@@ -17,60 +18,39 @@
       text-align: center;
       padding: 20px;
     }
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 24px;
+      background: #fff;
+      color: #667eea;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
   <div>
     <p style="font-size: 48px; margin-bottom: 20px;">🧈</p>
-    <p style="font-size: 20px;">Ouvre dans Butter</p>
-    <p style="font-size: 14px; opacity: 0.8;">Redirection automatique...</p>
+    <p style="font-size: 20px;">Ouvre ce restaurant dans Butter</p>
+    <a id="openLink" href="#">Ouvrir dans l'app</a>
+    <p style="font-size: 14px; opacity: 0.8; margin-top: 20px;">
+      Si tu n'as pas l'app, télécharge-la sur l'App Store
+    </p>
+    <a
+      href="https://apps.apple.com/fr/app/butter-guide-de-restaurants/id6749227938"
+      style="font-size: 14px; color: #fff; text-decoration: underline;"
+    >
+      Télécharger Butter
+    </a>
   </div>
 
   <script>
-    console.log('🚀 [Deep Link] Initialisation');
-    
-    // Récupérer l'ID du restaurant
-    const pathSegments = window.location.pathname.split('/').filter(p => p);
-    const restaurantId = pathSegments[pathSegments.length - 1];
-    console.log('📍 Restaurant ID:', restaurantId);
-    
-    // Détecter la plateforme
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    const isAndroid = /Android/.test(navigator.userAgent);
-    
-    console.log('📱 Plateforme:', { isIOS, isAndroid });
-    
-    // URLs
-    const deepLinkUrl = `https://butter-universal-links-config.vercel.app/restaurant/${restaurantId}`;
-    const iosAppStoreUrl = 'https://apps.apple.com/fr/app/butter-guide-de-restaurants/id6749227938';
-    const androidPlayStoreUrl = 'https://play.google.com/store/apps/details?id=com.tasenviedequoi.butter';
-    
-    // Créer un lien invisible et le cliquer
-    const link = document.createElement('a');
-    link.href = deepLinkUrl;
-    link.style.position = 'fixed';
-    link.style.top = '-9999px';
-    link.style.left = '-9999px';
-    document.body.appendChild(link);
-    
-    console.log('🔗 Lien créé:', deepLinkUrl);
-    
-    // Simuler un clic après 500ms
-    setTimeout(() => {
-      console.log('🖱️ Clic automatique');
-      link.click();
-      
-      // Après 2.5 secondes, vérifier si on doit rediriger vers le store
-      setTimeout(() => {
-        console.log('⏱️ Timeout - Redirection vers le store');
-        
-        if (isIOS) {
-          window.location.href = iosAppStoreUrl;
-        } else if (isAndroid) {
-          window.location.href = androidPlayStoreUrl;
-        }
-      }, 2500);
-    }, 500);
+    // Injecte le vrai Universal Link cliquable
+    const restaurantId = window.location.pathname.split('/').filter(Boolean).pop();
+    const openLink = document.getElementById('openLink');
+    openLink.href = `https://butter-universal-links-config.vercel.app/restaurant/${restaurantId}`;
   </script>
 </body>
 </html>
