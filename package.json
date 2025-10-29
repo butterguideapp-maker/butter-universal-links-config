@@ -1,0 +1,17 @@
+{
+  "name": "butter-universal-links-config",
+  "version": "1.0.0",
+  "description": "Configuration des Universal Links (apple-app-site-association) pour l'application iOS butter.paris - Hébergement minimal pour ouvrir les liens profonds",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "vercel",
+    "deploy:prod": "vercel --prod"
+  },
+  "keywords": [
+    "universal-links",
+    "apple-app-site-association"
+  ],
+  "author": "",
+  "license": "MIT"
+}
+
