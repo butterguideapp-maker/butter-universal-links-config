@@ -55,7 +55,7 @@
     p {
       color: #666;
       margin-bottom: 30px;
-      line-height: 1.6;
+      line-height: natural-scale(1.6);
     }
     
     .button {
@@ -86,28 +86,13 @@
       background: #e8e8e8;
     }
     
-    .loading {
-      display: none;
-      margin-top: 20px;
-    }
-    
-    .loading.show {
-      display: block;
-    }
-    
-    .spinner {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #667eea;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      animation: spin 1s linear infinite;
-      margin: 20px auto;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    .info {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #666;
     }
   </style>
 </head>
@@ -115,17 +100,17 @@
   <div class="container">
     <div class="icon">🧈</div>
     <h1>Ouvrir dans Butter</h1>
-    <p>Tu vas être redirigé vers l'application Butter pour voir ce restaurant.</p>
+    <p>Clique sur le bouton pour ouvrir ce restaurant dans l'application Butter.</p>
     
     <div id="buttons">
-      <a href="#" class="button" id="openApp">Ouvrir l'app</a>
+      <a href="#" class="button" id="openApp">Ouvrir l'app Butter</a>
       <br>
-      <a href="#" class="button button-secondary" id="downloadApp">Télécharger Butter</a>
+      <a href="#" class="button button-secondary" id="downloadApp">Télécharger l'app</a>
     </div>
     
-    <div class="loading" id="loading">
-      <div class="spinner"></div>
-      <p>Ouverture en cours...</p>
+    <div class="info">
+      💡 Si l'app est installée, elle s'ouvrira automatiquement.<br>
+      Sinon, tu seras redirigé vers l'App Store ou Play Store.
     </div>
   </div>
 
@@ -134,8 +119,8 @@
     const pathSegments = window.location.pathname.split('/');
     const restaurantId = pathSegments[pathSegments.length - 2]; // [id] dans le chemin
     
-    // URL de l'application
-    const appUrl = `https://butter-universal-links-config.vercel.app/restaurant/${restaurantId}`;
+    // URL de l'application (c'est cette URL qui va ouvrir l'app via Universal Links / App Links)
+    const deepLinkUrl = `https://butter-universal-links-config.vercel.app/restaurant/${restaurantId}`;
     const iosAppStoreUrl = 'https://apps.apple.com/app/butter/idYOUR_APP_ID'; // Remplacer par le vrai ID
     const androidPlayStoreUrl = 'https://play.google.com/store/apps/details?id=com.tasenviedequoi.butter';
     
@@ -143,33 +128,9 @@
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isAndroid = /Android/.test(navigator.userAgent);
     
-    // Bouton "Ouvrir l'app"
+    // Bouton "Ouvrir l'app" - redirige vers le deep link
     const openAppButton = document.getElementById('openApp');
-    openAppButton.href = appUrl;
-    
-    openAppButton.addEventListener('click', function(e) {
-      e.preventDefault();
-      
-      // Afficher le loading
-      document.getElementById('buttons').style.display = 'none';
-      document.getElementById('loading').classList.add('show');
-      
-      // Ouvrir le lien (l'app va s'ouvrir automatiquement si installée via Universal Links/App Links)
-      window.location.href = appUrl;
-      
-      // Si après 2 secondes, on est toujours là, proposer de télécharger l'app
-      setTimeout(function() {
-        if (isIOS) {
-          window.location.href = iosAppStoreUrl;
-        } else if (isAndroid) {
-          window.location.href = androidPlayStoreUrl;
-        } else {
-          document.getElementById('loading').classList.remove('show');
-          document.getElementById('buttons').style.display = 'block';
-          document.querySelector('p').textContent = 'L\'application n\'est pas installée. Télécharge-la !';
-        }
-      }, 2000);
-    });
+    openAppButton.href = deepLinkUrl;
     
     // Bouton "Télécharger l'app"
     const downloadAppButton = document.getElementById('downloadApp');
@@ -181,15 +142,9 @@
       } else if (isAndroid) {
         window.location.href = androidPlayStoreUrl;
       } else {
-        alert('Détecte ton appareil mobile pour télécharger l\'app !');
+        alert('Ouvre cette page sur un appareil mobile pour télécharger l\'app !');
       }
     });
-    
-    // Tentative automatique d'ouverture au chargement de la page (après 500ms)
-    setTimeout(function() {
-      document.getElementById('openApp').click();
-    }, 500);
   </script>
 </body>
 </html>
-
