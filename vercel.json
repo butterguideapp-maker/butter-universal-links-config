@@ -22,7 +22,7 @@
   "rewrites": [
     {
       "source": "/restaurant/:id",
-      "destination": "/restaurant/[id]/index.html"
+      "destination": "/api/restaurant/[id].js"
     }
   ]
 }
