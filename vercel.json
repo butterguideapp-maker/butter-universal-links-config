@@ -8,6 +8,21 @@
           "value": "application/json"
         }
       ]
+    },
+    {
+      "source": "/.well-known/assetlinks.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/restaurant/:id",
+      "destination": "/restaurant/[id]/index.html"
     }
   ]
 }
