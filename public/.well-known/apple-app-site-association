@@ -3,10 +3,12 @@
     "apps": [],
     "details": [
       {
-        "appID": "5QD7Q63KZT.com.tasenviedequoi.butter",
-        "paths": ["/restaurant/*"]
+        "appID": "5QD7Q63KZT.com.daniel.butter",
+        "paths": [
+          "/restaurant/*",
+          "/r/*"
+        ]
       }
     ]
   }
 }
-

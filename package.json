@@ -1,17 +1,26 @@
 {
-  "name": "butter-universal-links-config",
-  "version": "1.0.0",
-  "description": "Configuration des Universal Links (apple-app-site-association) pour l'application iOS butter - Hébergement minimal pour ouvrir les liens profonds via butter-universal-links-config.vercel.app",
-  "main": "index.js",
+  "name": "butterguide-landing",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "deploy": "vercel",
-    "deploy:prod": "vercel --prod"
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "keywords": [
-    "universal-links",
-    "apple-app-site-association"
-  ],
-  "author": "",
-  "license": "MIT"
+  "dependencies": {
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^15.1.0",
+    "postcss": "^8.0.0",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.0.0"
+  }
 }
-
