@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           alt: restaurant.name,
         }
       ],
-      url: `https://butterguide.com/restaurant/${id}`,
+      url: `https://butterguide.fr/restaurant/${id}`,
       siteName: 'Butter',
       type: 'website',
     },
