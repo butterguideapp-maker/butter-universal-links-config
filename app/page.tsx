@@ -1,73 +1,88 @@
-import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
-      <div className="container mx-auto px-4 py-16">
+    <main className="min-h-screen bg-[#F1EFEB]">
+      <div className="container mx-auto px-4 py-12 max-w-md">
 
-        {/* Header avec logo */}
-        <div className="text-center mb-12">
-          <h1 className="text-6xl font-bold mb-4 text-gray-900">
-            Butter
-          </h1>
-          <p className="text-xl text-gray-600">
-            Découvre les meilleurs restaurants de Paris
-          </p>
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <Image
+            src="/logo.png"
+            alt="Butter"
+            width={120}
+            height={40}
+            className="mx-auto"
+          />
         </div>
 
-        {/* Hero Section */}
-        <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8 mb-12">
-          <div className="text-center mb-8">
-            <div className="w-32 h-32 mx-auto mb-6 bg-amber-100 rounded-full flex items-center justify-center">
-              <span className="text-6xl">🍽️</span>
-            </div>
-            <h2 className="text-3xl font-bold mb-4">
-              Partage tes découvertes culinaires
-            </h2>
-            <p className="text-gray-600 text-lg">
-              Avec Butter, partage facilement tes restaurants préférés avec tes amis
-            </p>
+        {/* Hero Card */}
+        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+
+          {/* App Icon */}
+          <div className="flex justify-center mb-6">
+            <Image
+              src="/app-icon.png"
+              alt="Butter App"
+              width={120}
+              height={120}
+              className="rounded-[26px] shadow-md"
+            />
           </div>
+
+          <h1 className="text-2xl font-bold text-[#111111] text-center mb-2" style={{ fontFamily: 'Georgia, serif' }}>
+            Ton guide resto parisien
+          </h1>
+
+          <p className="text-[#353535] text-center mb-8">
+            Découvre, enregistre et partage tes meilleures adresses
+          </p>
 
           {/* CTA App Store */}
           <a
             href="https://apps.apple.com/fr/app/butter-guide-de-restaurants/id6749227938"
-            className="block w-full bg-black text-white text-center py-4 rounded-xl font-semibold text-lg hover:bg-gray-800 transition-colors"
+            className="block w-full bg-[#111111] text-white text-center py-4 rounded-xl font-semibold hover:bg-[#353535] transition-colors"
           >
             Télécharger sur l&apos;App Store
           </a>
         </div>
 
         {/* Features */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-          <div className="text-center p-6 bg-white rounded-xl shadow-sm">
-            <div className="text-5xl mb-4">🔍</div>
-            <h3 className="font-bold text-lg mb-2">Découvre</h3>
-            <p className="text-gray-600">
-              Les meilleures adresses sélectionnées pour toi
-            </p>
+        <div className="space-y-3">
+          <div className="bg-white rounded-xl p-4 flex items-center gap-4 shadow-sm">
+            <div className="w-12 h-12 bg-[#D4F2DA] rounded-full flex items-center justify-center flex-shrink-0">
+              <span className="text-[#60BC81] text-xl">&#10003;</span>
+            </div>
+            <div>
+              <h3 className="font-semibold text-[#111111]">Sélection triée sur le volet</h3>
+              <p className="text-sm text-[#8D836F]">Les meilleures adresses de Paris</p>
+            </div>
           </div>
 
-          <div className="text-center p-6 bg-white rounded-xl shadow-sm">
-            <div className="text-5xl mb-4">⭐</div>
-            <h3 className="font-bold text-lg mb-2">Enregistre</h3>
-            <p className="text-gray-600">
-              Crée tes listes de favoris personnalisées
-            </p>
+          <div className="bg-white rounded-xl p-4 flex items-center gap-4 shadow-sm">
+            <div className="w-12 h-12 bg-[#F1EFEB] rounded-full flex items-center justify-center flex-shrink-0">
+              <span className="text-[#8D836F] text-xl">&#9733;</span>
+            </div>
+            <div>
+              <h3 className="font-semibold text-[#111111]">Crée tes listes</h3>
+              <p className="text-sm text-[#8D836F]">Enregistre tes favoris et à tester</p>
+            </div>
           </div>
 
-          <div className="text-center p-6 bg-white rounded-xl shadow-sm">
-            <div className="text-5xl mb-4">📤</div>
-            <h3 className="font-bold text-lg mb-2">Partage</h3>
-            <p className="text-gray-600">
-              Recommande tes coups de cœur à tes proches
-            </p>
+          <div className="bg-white rounded-xl p-4 flex items-center gap-4 shadow-sm">
+            <div className="w-12 h-12 bg-[#F1EFEB] rounded-full flex items-center justify-center flex-shrink-0">
+              <span className="text-[#8D836F] text-xl">&#8599;</span>
+            </div>
+            <div>
+              <h3 className="font-semibold text-[#111111]">Partage facilement</h3>
+              <p className="text-sm text-[#8D836F]">Envoie tes recos à tes amis</p>
+            </div>
           </div>
         </div>
 
         {/* Footer */}
-        <footer className="text-center mt-16 text-gray-500 text-sm">
-          <p>© 2025 Butter - Tous droits réservés</p>
+        <footer className="text-center mt-12 text-[#8D836F] text-sm">
+          <p>&copy; 2025 Butter</p>
         </footer>
       </div>
     </main>

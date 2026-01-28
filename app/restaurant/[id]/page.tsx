@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -64,24 +65,30 @@ export default async function RestaurantPage({ params }: Props) {
   const restaurant = await getRestaurantData(id);
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      <div className="max-w-2xl mx-auto bg-white min-h-screen">
+    <main className="min-h-screen bg-[#F1EFEB]">
+      <div className="max-w-md mx-auto bg-white min-h-screen shadow-lg">
 
-        {/* Header with back button */}
-        <div className="p-4 border-b">
+        {/* Header with logo */}
+        <div className="p-4 border-b border-[#E5E5E5] flex items-center justify-between">
           <Link
             href="/"
-            className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors"
+            className="flex items-center text-[#111111] hover:text-[#60BC81] transition-colors"
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Retour
+            <span className="text-sm font-medium">Retour</span>
           </Link>
+          <Image
+            src="/logo.png"
+            alt="Butter"
+            width={80}
+            height={28}
+          />
         </div>
 
         {/* Main image */}
-        <div className="relative h-64 md:h-96 bg-gray-200">
+        <div className="relative h-64 bg-[#C9C1B1]">
           <img
             src={restaurant.imageUrl}
             alt={restaurant.name}
@@ -91,10 +98,10 @@ export default async function RestaurantPage({ params }: Props) {
           {/* Open/Closed badge */}
           <div className="absolute top-4 right-4">
             <span
-              className={`px-4 py-2 rounded-full text-white font-semibold shadow-lg ${
+              className={`px-3 py-1.5 rounded-full text-sm font-semibold shadow-md ${
                 restaurant.isOpen
-                  ? 'bg-green-500'
-                  : 'bg-red-500'
+                  ? 'bg-[#D4F2DA] text-[#60BC81]'
+                  : 'bg-[#F2D7D4] text-[#D3695E]'
               }`}
             >
               {restaurant.isOpen ? 'Ouvert' : 'Fermé'}
@@ -103,20 +110,20 @@ export default async function RestaurantPage({ params }: Props) {
         </div>
 
         {/* Content */}
-        <div className="p-6 md:p-8">
+        <div className="p-6">
 
           {/* Restaurant name */}
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">
+          <h1 className="text-2xl font-bold text-[#111111] mb-2" style={{ fontFamily: 'Georgia, serif' }}>
             {restaurant.name}
           </h1>
 
           {/* Cuisines */}
           {restaurant.cuisines.length > 0 && (
-            <div className="flex gap-2 mb-4">
+            <div className="flex flex-wrap gap-2 mb-4">
               {restaurant.cuisines.map((cuisine, i) => (
                 <span
                   key={i}
-                  className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-sm font-medium"
+                  className="px-3 py-1 bg-[#F1EFEB] text-[#8D836F] rounded-full text-xs font-medium"
                 >
                   {cuisine}
                 </span>
@@ -125,8 +132,8 @@ export default async function RestaurantPage({ params }: Props) {
           )}
 
           {/* Address */}
-          <p className="text-gray-600 mb-6 flex items-start">
-            <svg className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <p className="text-[#8D836F] mb-4 flex items-start text-sm">
+            <svg className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
@@ -134,7 +141,7 @@ export default async function RestaurantPage({ params }: Props) {
           </p>
 
           {/* Description */}
-          <p className="text-gray-700 text-lg mb-8 leading-relaxed">
+          <p className="text-[#353535] mb-8 leading-relaxed">
             {restaurant.description}
           </p>
 
@@ -143,7 +150,7 @@ export default async function RestaurantPage({ params }: Props) {
             {/* Open in Butter button */}
             <a
               href={`butterapp://restaurant/${restaurant.id}`}
-              className="block w-full bg-black text-white text-center py-4 rounded-xl font-semibold text-lg hover:bg-gray-800 transition-colors shadow-md"
+              className="block w-full bg-[#111111] text-white text-center py-4 rounded-xl font-semibold hover:bg-[#353535] transition-colors"
             >
               Ouvrir dans Butter
             </a>
@@ -151,7 +158,7 @@ export default async function RestaurantPage({ params }: Props) {
             {/* Download button */}
             <a
               href="https://apps.apple.com/fr/app/butter-guide-de-restaurants/id6749227938"
-              className="block w-full bg-white border-2 border-black text-black text-center py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transition-colors"
+              className="block w-full bg-[#F1EFEB] text-[#111111] text-center py-4 rounded-xl font-semibold hover:bg-[#C9C1B1] transition-colors"
             >
               Télécharger Butter
             </a>
@@ -159,9 +166,9 @@ export default async function RestaurantPage({ params }: Props) {
         </div>
 
         {/* Footer */}
-        <div className="text-center p-8 border-t mt-8">
-          <p className="text-gray-500 text-sm">
-            Découvre plus de restaurants sur <span className="font-semibold">Butter</span>
+        <div className="text-center p-6 border-t border-[#E5E5E5] mt-4">
+          <p className="text-[#8D836F] text-sm">
+            Découvre plus de restaurants sur <span className="font-semibold text-[#111111]">Butter</span>
           </p>
         </div>
       </div>
