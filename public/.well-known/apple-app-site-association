@@ -4,7 +4,7 @@
     "details": [
       {
         "appID": "5QD7Q63KZT.com.daniel.butter",
-        "paths": ["/restaurant/*", "/guide/*"]
+        "paths": ["/restaurant/*", "/guide/*", "/collection/*", "/reel/*", "/swipe/*"]
       }
     ]
   }
